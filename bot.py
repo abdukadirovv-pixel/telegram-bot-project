@@ -32,7 +32,7 @@ async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 if __name__ == '__main__':
     # Pulls the token securely from the environment variables you set on Render
-    TOKEN = os.environ.get("8959582090:AAHg6Vj8NkahupJ8vC3EWt5iox6wRwgdFDo")
+    TOKEN = os.environ.get("BOT_TOKEN")
     
     application = ApplicationBuilder().token(TOKEN).build()
 
