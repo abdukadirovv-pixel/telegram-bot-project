@@ -16,11 +16,14 @@ SECRET_FILES = {
 # Words that trigger a text message response
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
-    "help": "Send 'vocab' for a file, or try other secret words for text!"
+    "secret": "You found the hidden password! Good job."
 }
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Yo! Send me a secret word to get a file or a text response.")
+    await update.message.reply_text("Yo! Send me a secret word to get a file or a text response, or type /help for assistance.")
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Send 'vocab' for a file, or try other secret words like 'hello' or 'secret' for text!")
 
 async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip().lower()
@@ -47,6 +50,7 @@ if __name__ == '__main__':
     application = ApplicationBuilder().token(TOKEN).build()
 
     application.add_handler(CommandHandler('start', start))
+    application.add_handler(CommandHandler('help', help_command))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_secret_word))
 
     print("Bot is up and listening for secret words...")
