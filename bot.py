@@ -1,4 +1,5 @@
 import logging
+import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
@@ -30,10 +31,16 @@ async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text("Never heard of that word. Try another one!")
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token("8959582090:AAHg6Vj8NkahupJ8vC3EWt5iox6wRwgdFDo").build()
+    # Pulls the token securely from the environment variables you set on Render
+    TOKEN = os.environ.get("8959582090:AAHg6Vj8NkahupJ8vC3EWt5iox6wRwgdFDo")
+    
+    application = ApplicationBuilder().token(TOKEN).build()
 
     application.add_handler(CommandHandler('start', start))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_secret_word))
 
     print("Bot is up and listening for secret words...")
     application.run_polling()
+
+
+   
