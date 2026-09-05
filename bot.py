@@ -17,13 +17,14 @@ SECRET_FILES = {
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
     "secret": "You found the hidden password! Good job."
+    "linnie": "Negap Kumushayyy bamisannn 😄."
 }
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Yo! Send me a secret word to get a file or a text response, or type /help for assistance.")
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Send 'vocab' for a file, or try other secret words like 'hello' or 'secret' for text!")
+    await update.message.reply_text("contact me at @snxr_a for assistance!")
 
 async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip().lower()
