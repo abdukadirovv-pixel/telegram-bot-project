@@ -16,7 +16,7 @@ SECRET_FILES = {
 # Words that trigger a text message response
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
-    "secret": "You found the hidden password! Good job."
+    "secret": "You found the hidden password! Good job.",
     "linnie": "Negap Kumushayyy bamisannn 😄."
 }
 
