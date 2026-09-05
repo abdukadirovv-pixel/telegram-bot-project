@@ -8,13 +8,19 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Your secret words mapped to file paths
+# Words that trigger a file response
 SECRET_FILES = {
     "vocab": "documents/vocab.pdf"
 }
 
+# Words that trigger a text message response
+SECRET_TEXTS = {
+    "hello": "Hey there! Welcome to my hybrid bot.",
+    "help": "Send 'vocab' for a file, or try other secret words for text!"
+}
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Yo! Send me one of your secret words and I'll drop the file.")
+    await update.message.reply_text("Yo! Send me a secret word to get a file or a text response.")
 
 async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip().lower()
@@ -27,11 +33,15 @@ async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 await update.message.reply_document(document=file_to_send)
         except FileNotFoundError:
             await update.message.reply_text(f"Oops! I found the keyword, but the file at {file_path} is missing.")
+            
+    elif text in SECRET_TEXTS:
+        response_text = SECRET_TEXTS[text]
+        await update.message.reply_text(response_text)
+        
     else:
         await update.message.reply_text("Never heard of that word. Try another one!")
 
 if __name__ == '__main__':
-    # Pulls the token securely from the environment variables you set on Render
     TOKEN = os.environ.get("BOT_TOKEN")
     
     application = ApplicationBuilder().token(TOKEN).build()
@@ -41,6 +51,3 @@ if __name__ == '__main__':
 
     print("Bot is up and listening for secret words...")
     application.run_polling()
-
-
-   
