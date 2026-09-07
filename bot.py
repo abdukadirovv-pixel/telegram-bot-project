@@ -39,7 +39,9 @@ def get_random_quote():
 
 
 # Secret Files and Texts Configuration
-SECRET_FILES = {"vocab": "documents/vocab.pdf"}
+SECRET_FILES = {"vocab": "documents/vocab.pdf",
+                "rasp": "documents/rasp.png"
+}
 
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
