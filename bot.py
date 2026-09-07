@@ -44,7 +44,7 @@ SECRET_FILES = {"vocab": "documents/vocab.pdf"}
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
     "secret": "You found the hidden password! Good job.",
-    "linnie": "matemman misal ishla hehe.",
+    "linni": "matemman misal ishla hehe.",
 }
 
 # Complete Timetable Mapping (0: Monday, 4: Friday)
