@@ -2,6 +2,7 @@ from datetime import datetime, time
 import logging
 import os
 import random
+from zoneinfo import ZoneInfo
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
@@ -10,7 +11,6 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
-import pytz
 
 # Enable logging
 logging.basicConfig(
@@ -20,7 +20,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Timezone configuration for Uzbekistan
-TZ = pytz.timezone("Asia/Tashkent")
+TZ = ZoneInfo("Asia/Tashkent")
 
 # Motivational quotes list
 QUOTES = [
