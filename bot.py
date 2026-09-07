@@ -9,12 +9,10 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Words that trigger a file response
 SECRET_FILES = {
     "vocab": "documents/vocab.pdf"
 }
 
-# Words that trigger a text message response
 SECRET_TEXTS = {
     "hello": "Hey there! Welcome to my hybrid bot.",
     "secret": "You found the hidden password! Good job."
@@ -22,7 +20,7 @@ SECRET_TEXTS = {
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Yo! Send me a secret word, type /help, or use /remind to set reminders."
+        "Yo! Send me a secret word, type /help, or use /remind YYYY-MM-DD <message> to set reminders starting 3 days before at 4:00 PM."
     )
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -41,8 +39,8 @@ async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not reminder_text:
             reminder_text = f"Reminder for {date_str}!"
 
-        reminder_time = time(16, 0, 0) # 4:00 PM
-        days_before = [3, 2, 1] # 3 days in advance (e.g., if target is 24th, starts on the 21st)
+        reminder_time = time(16, 0, 0)
+        days_before = [3, 2, 1]
         now = datetime.now()
         
         scheduled_count = 0
