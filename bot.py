@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 import logging
 import os
 import random
@@ -39,8 +39,9 @@ def get_random_quote():
 
 
 # Secret Files and Texts Configuration
-SECRET_FILES = {"vocab": "documents/vocab.pdf",
-                "rasp": "documents/rasp.png"
+SECRET_FILES = {
+    "vocab": "documents/vocab.pdf",
+    "rasp": "documents/rasp.png",
 }
 
 SECRET_TEXTS = {
@@ -305,7 +306,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
       "🤖 *School Assistant Bot Activated!*\n\n"
       "You will receive a **15-minute warning message every morning at 08:45 AM** "
       "with your full daily schedule and a fresh motivational quote!\n\n"
-      "Send me a secret word (like `vocab`), type /help, or use /remind to set reminders.",
+      "Send me a secret word (like `vocab` or `rasp`), type /help, or use /remind to set reminders.",
       parse_mode="Markdown",
   )
 
@@ -314,8 +315,55 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   await update.message.reply_text(
       "Contact me at @snxr_a for assistance!\n"
       "• Use /remind YYYY-MM-DD <message> to set a 3-day advance notice.\n"
-      "• Type secret words like 'vocab', 'hello', or 'secret' for hidden triggers."
+      "• Type secret words like 'vocab', 'rasp', 'linni', 'hello', or 'secret' for hidden triggers."
   )
+
+
+async def alarm(context: ContextTypes.DEFAULT_TYPE):
+  job = context.job
+  await context.bot.send_message(chat_id=job.chat_id, text=f"⏰ {job.data}")
+
+
+async def set_reminder(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  try:
+    date_str = context.args[0]
+    target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    reminder_text = " ".join(context.args[1:])
+
+    if not reminder_text:
+      reminder_text = f"Reminder for {date_str}!"
+
+    reminder_time = time(16, 0, 0)
+    days_before = [3, 2, 1]
+    now = datetime.now()
+
+    scheduled_count = 0
+    for d in days_before:
+      remind_date = target_date - timedelta(days=d)
+      remind_datetime = datetime.combine(remind_date, reminder_time)
+
+      if remind_datetime > now:
+        context.job_queue.run_once(
+            alarm,
+            when=remind_datetime,
+            chat_id=update.effective_chat.id,
+            data=f"Reminder ({d} days left until {date_str}): {reminder_text}",
+        )
+        scheduled_count += 1
+
+    if scheduled_count > 0:
+      await update.message.reply_text(
+          f"Timer set! I will message you at 4:00 PM starting 3 days before {date_str}."
+      )
+    else:
+      await update.message.reply_text(
+          "Those reminder dates are already in the past!"
+      )
+
+  except (IndexError, ValueError):
+    await update.message.reply_text(
+        "Usage: /remind YYYY-MM-DD <message>\nExample: /remind 2026-09-24 Project deadline"
+    )
 
 
 async def send_morning_warning(context: ContextTypes.DEFAULT_TYPE):
@@ -365,7 +413,7 @@ async def handle_secret_word(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_document(document=file_to_send)
     except FileNotFoundError:
       await update.message.reply_text(
-          f"Oops! I found the keyword, but the file at {file_path} is missing."
+          f"Oops! I found the keyword, but the file at `{file_path}` is missing on the server. Make sure it's committed and pushed to GitHub/Railway!"
       )
 
   elif text in SECRET_TEXTS:
@@ -386,6 +434,7 @@ if __name__ == "__main__":
   # Command handlers
   application.add_handler(CommandHandler("start", start))
   application.add_handler(CommandHandler("help", help_command))
+  application.add_handler(CommandHandler("remind", set_reminder))
 
   # Secret word / text handler
   application.add_handler(
