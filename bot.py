@@ -20,7 +20,7 @@ SECRET_TEXTS = {
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Yo! Send me a secret word, type /help, or use /remind YYYY-MM-DD <message> to set reminders starting 3 days before at 4:00 PM."
+        "Yo! Send me a secret word, type /help, or use /remind to set reminders."
     )
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
